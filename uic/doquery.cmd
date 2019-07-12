@@ -1,0 +1,1 @@
+@wget -i query.uri -O wikidata-stations.json

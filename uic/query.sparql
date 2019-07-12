@@ -1,0 +1,11 @@
+select ?item ?itemLabel ?lon ?lat WHERE {
+  VALUES ?type { wd:Q55488 wd:Q55678 }.
+  ?item wdt:P31 ?type.
+  ?item wdt:P17 wd:Q213.
+  ?item wdt:P625 ?coords.
+  BIND (geof:longitude(?coords) AS ?lon).
+  BIND (geof:latitude(?coords) AS ?lat).
+  MINUS { ?item wdt:P722 [] }
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "cs,en,pl,nl". }
+}
+LIMIT 5
