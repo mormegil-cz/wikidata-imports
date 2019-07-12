@@ -1,0 +1,5 @@
+query=select ?item ?ruian where {
+  ?item wdt:P4533 ?ruian.
+  MINUS { ?item wdt:P281 ?zip }
+}
+LIMIT 5

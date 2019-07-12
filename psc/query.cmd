@@ -1,0 +1,1 @@
+curl -o wikidata-ruian.json -X POST -d @query.postdata https://query.wikidata.org/sparql?format=json
