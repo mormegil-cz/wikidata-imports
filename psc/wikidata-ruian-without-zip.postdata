@@ -1,0 +1,1 @@
+query=select%20%3Fitem%20%3Fruian%20%3Fzip%20where%20%7B%0A%20%20%3Fitem%20wdt%3AP4533%20%3Fruian.%0A%20%20MINUS%20%7B%3Fitem%20wdt%3AP281%20%3Fzip%20%7D%0A%7D
