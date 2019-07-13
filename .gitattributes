@@ -1,0 +1,2 @@
+*.linq  linguist-language=csharp
+*.sparql  linguist-language=SPARQL
