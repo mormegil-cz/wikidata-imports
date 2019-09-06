@@ -31,14 +31,14 @@ private static readonly HashSet<string> problematicItems = new HashSet<string> {
 
 void Main()
 {
-	var codebook = new PointCodebook(@"y:\_mine\KdyPojedeVlak\App_Data");
+	var codebook = new PointCodebook(@"y:\KdyPojedeVlak\App_Data");
 	codebook.Load();
 
-	var wikidataJson = JObject.Parse(File.ReadAllText(@"y:\_mine\wikidata-imports\uic\wikidata-stations.json"));
+	var wikidataJson = JObject.Parse(File.ReadAllText(@"y:\wikidata-imports\uic\wikidata-stations.json"));
 	var wikidataStations = wikidataJson["results"]["bindings"];
 	var mapping = new Dictionary<string, string>(wikidataStations.Count());
 	int problemCount = 0;
-	using (var quickStatements = new StreamWriter(@"y:\_mine\wikidata-imports\uic\import-qs.tsv", false, Encoding.UTF8))
+	using (var quickStatements = new StreamWriter(@"y:\wikidata-imports\uic\import-qs.tsv", false, Encoding.UTF8))
 	{
 		foreach (var station in wikidataStations)
 		{
@@ -63,12 +63,14 @@ void Main()
 			var nameClean = name.ToLower().Replace('\u00A0', ' ').Replace("–", "-").Replace(" – ", "-").Replace(" - ", "-").Replace("železniční stanice", "").Replace("železniční zastávka", "").Replace("zastávka", "").Replace("nádraží", "").Replace("(", "").Replace(")", "").Trim();
 			var pointNameClean = nearestPoint.LongName.ToLower().Replace(" - ", "-").Replace("železniční stanice", "").Replace("zastávka", "").Replace("nádraží", "").Replace(", žel.st.", "").Replace("(", "").Replace(")", "").Trim();
 
+/*
 			if (distance > 500 || nameClean != pointNameClean)
 			{
 				Console.WriteLine($"Skipping: {name}\t{item}\t{lon}\t{lat}\t{nearestPoint.LongName}\t{nearestPoint.Longitude}\t{nearestPoint.Latitude}\t{distance:N0}");
 				++problemCount;
 				continue;
 			}
+			
 
 			if (distance > 200)
 					{
@@ -81,8 +83,8 @@ void Main()
 				Console.WriteLine($"{name}\t{item}\t{lon}\t{lat}\t{nearestPoint.LongName}\t{nearestPoint.Longitude}\t{nearestPoint.Latitude}\t{distance:N0}");
 				++problemCount;
 			}
+*/
 
-/*
 					if (
 					distance < 100 &&
 					//name != nearestPoint.LongName
@@ -92,7 +94,6 @@ void Main()
 						Console.WriteLine($"{name}\t{item}\t{lon}\t{lat}\t{nearestPoint.LongName}\t{nearestPoint.Longitude}\t{nearestPoint.Latitude}\t{distance:N0}");
 						++problemCount;
 					}
-*/
 
 			/*
 					if (distance > 300 && nameClean == pointNameClean)
