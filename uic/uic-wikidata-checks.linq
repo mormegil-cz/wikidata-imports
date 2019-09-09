@@ -31,14 +31,15 @@ private static readonly HashSet<string> problematicItems = new HashSet<string> {
 
 void Main()
 {
-	var codebook = new PointCodebook(@"y:\KdyPojedeVlak\App_Data");
+	var basePath = @"y:\_mine\";
+	var codebook = new PointCodebook(basePath + @"KdyPojedeVlak\App_Data");
 	codebook.Load();
 
-	var wikidataJson = JObject.Parse(File.ReadAllText(@"y:\wikidata-imports\uic\wikidata-stations.json"));
+	var wikidataJson = JObject.Parse(File.ReadAllText(basePath + @"wikidata-imports\uic\wikidata-stations.json"));
 	var wikidataStations = wikidataJson["results"]["bindings"];
 	var mapping = new Dictionary<string, string>(wikidataStations.Count());
 	int problemCount = 0;
-	using (var quickStatements = new StreamWriter(@"y:\wikidata-imports\uic\import-qs.tsv", false, Encoding.UTF8))
+	using (var quickStatements = new StreamWriter(basePath + @"wikidata-imports\uic\import-qs.tsv", false, Encoding.UTF8))
 	{
 		foreach (var station in wikidataStations)
 		{
@@ -63,27 +64,27 @@ void Main()
 			var nameClean = name.ToLower().Replace('\u00A0', ' ').Replace("–", "-").Replace(" – ", "-").Replace(" - ", "-").Replace("železniční stanice", "").Replace("železniční zastávka", "").Replace("zastávka", "").Replace("nádraží", "").Replace("(", "").Replace(")", "").Trim();
 			var pointNameClean = nearestPoint.LongName.ToLower().Replace(" - ", "-").Replace("železniční stanice", "").Replace("zastávka", "").Replace("nádraží", "").Replace(", žel.st.", "").Replace("(", "").Replace(")", "").Trim();
 
-/*
-			if (distance > 500 || nameClean != pointNameClean)
+			if (distance > 500) // || nameClean != pointNameClean)
 			{
 				Console.WriteLine($"Skipping: {name}\t{item}\t{lon}\t{lat}\t{nearestPoint.LongName}\t{nearestPoint.Longitude}\t{nearestPoint.Latitude}\t{distance:N0}");
 				++problemCount;
 				continue;
 			}
-			
 
-			if (distance > 200)
-					{
-						Console.WriteLine($"{name}\t{item}\t{lon}\t{lat}\t{nearestPoint.LongName}\t{nearestPoint.Longitude}\t{nearestPoint.Latitude}\t{distance}");
-						++problemCount;
-					}
 
-			if (nameClean != pointNameClean)
-			{
-				Console.WriteLine($"{name}\t{item}\t{lon}\t{lat}\t{nearestPoint.LongName}\t{nearestPoint.Longitude}\t{nearestPoint.Latitude}\t{distance:N0}");
-				++problemCount;
-			}
-*/
+						if (distance > 100)
+								{
+									Console.WriteLine($"{name}\t{item}\t{lon}\t{lat}\t{nearestPoint.LongName}\t{nearestPoint.Longitude}\t{nearestPoint.Latitude}\t{distance}");
+									++problemCount;
+								}
+			/*
+
+						if (nameClean != pointNameClean)
+						{
+							Console.WriteLine($"{name}\t{item}\t{lon}\t{lat}\t{nearestPoint.LongName}\t{nearestPoint.Longitude}\t{nearestPoint.Latitude}\t{distance:N0}");
+							++problemCount;
+						}
+			*/
 
 					if (
 					distance < 100 &&
@@ -112,11 +113,13 @@ void Main()
 			else
 			{
 				mapping.Add(nearestPoint.FullIdentifier, info);
+				Console.WriteLine($"Mapped: {name}\t{item}\t{lon}\t{lat}\t{nearestPoint.LongName}\t{nearestPoint.Longitude}\t{nearestPoint.Latitude}\t{distance:N0}");
 			}
 			quickStatements.WriteLine($"{item}\tP722\t\"54{nearestPoint.ID.PadLeft(6, '0').Substring(0, 5)}\"\tS248\tQ65456021\tS577\t+2019-01-01T00:00:00Z/11\tS813\t+{DateTime.UtcNow:yyyy-MM-dd}T00:00:00Z/11");
 		}
 	}
-	if (problemCount > 0) Console.WriteLine("*** TOTAL {0} problem(s) ***", problemCount);
+	if (problemCount > 0) Console.WriteLine("*** TOTAL {0} problem(s) from {1} stations ***", problemCount, wikidataStations.Count());
+	else Console.WriteLine("*** TOTAL {0} station(s) ***", wikidataStations.Count());
 }
 
 public class PointCodebook

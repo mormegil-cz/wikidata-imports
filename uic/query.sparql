@@ -7,6 +7,8 @@ select ?item ?itemLabel ?lon ?lat WHERE {
   BIND (geof:latitude(?coords) AS ?lat).
   MINUS { ?item wdt:P722 [] }
   MINUS { ?item wdt:P81/wdt:P31/wdt:P279* wd:Q1112477 }
+  MINUS { ?item wdt:P81/wdt:P31/wdt:P279* wd:Q1424016 }
+  MINUS { ?item wdt:P81/wdt:P31/wdt:P279* wd:Q420962 }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "cs,en,pl,nl". }
 }
 LIMIT 5
