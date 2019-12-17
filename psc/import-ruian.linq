@@ -16,7 +16,7 @@ void Main()
 	var zipsForStreet = new Dictionary<string, HashSet<string>>();
 	var unknownRuianIDs = new HashSet<int>();
 
-	ReadWikidataJson(@"y:\wikidata-imports\psc\wikidata-ruian-without-zip.json", reader =>
+	ReadWikidataJson(@"y:\_mine\wikidata-imports\psc\wikidata-ruian-without-zip.json", reader =>
 	{
 		var itemUri = ReadProperty(reader, "item", "uri");
 		var ruian = ReadProperty(reader, "ruian", "literal");
@@ -24,7 +24,7 @@ void Main()
 		itemForRuian.Add(Int32.Parse(ruian, CultureInfo.InvariantCulture), qid);
 	});
 
-	ReadWikidataJson(@"y:\wikidata-imports\psc\wikidata-ruian-with-zip.json", reader =>
+	ReadWikidataJson(@"y:\_mine\wikidata-imports\psc\wikidata-ruian-with-zip.json", reader =>
 	{
 		var itemUri = ReadProperty(reader, "item", "uri");
 		var ruian = ReadProperty(reader, "ruian", "literal");
@@ -36,6 +36,15 @@ void Main()
 			zipList = new HashSet<string>(3);
 			itemsWithZips.Add(ruianID, zipList);
 		}
+		if (itemForRuian.TryGetValue(ruianID, out var currentForRuian))
+		{
+			if (currentForRuian != qid) Console.WriteLine("Mismatch for street #{0}: {1} vs {2}", ruianID, currentForRuian, qid);
+		}
+		else
+		{
+			itemForRuian.Add(ruianID, qid);
+		}
+		itemForRuian[ruianID] = qid;
 		if (zipCode.Length != 6) Console.WriteLine("Zip '{0}' for street {1} ({2}) is badly formatted", zipCode, ruianID, qid);
 		zipList.Add(CleanZip(zipCode));
 	});
@@ -46,7 +55,7 @@ void Main()
 		itemsWithZipsRemaining.Add(s.Key, new HashSet<string>(s.Value));
 	}
 
-	using (var zip = ZipFile.OpenRead(@"y:\wikidata-imports\psc\20190630_OB_ADR_csv.zip"))
+	using (var zip = ZipFile.OpenRead(@"y:\_mine\wikidata-imports\psc\20191130_OB_ADR_csv.zip"))
 	{
 		foreach (var entry in zip.Entries)
 		{
@@ -102,12 +111,19 @@ void Main()
 			}
 		}
 	}
-	foreach (var e in itemsWithZipsRemaining.Where(r => r.Value.Count > 0))
+	using (var output = new StreamWriter(@"y:\_mine\wikidata-imports\psc\import-qs\removals.tsv", false, Encoding.UTF8))
 	{
-		Console.WriteLine("Street {0} has zips {1} it should not have", e.Key, String.Join(", ", e.Value));
+		foreach (var e in itemsWithZipsRemaining.Where(r => r.Value.Count > 0))
+		{
+			Console.WriteLine("Street {0} has zips {1} it should not have", e.Key, String.Join(", ", e.Value));
+			foreach (var zip in e.Value)
+			{
+				output.WriteLine($"-{itemForRuian[e.Key]}\tP281\t\"{FormatZip(zip)}\"");
+			}
+		}
 	}
-	
-	using (var output = new StreamWriter(@"y:\wikidata-imports\psc\streetzips.txt", false, Encoding.UTF8))
+
+	using (var output = new StreamWriter(@"y:\_mine\wikidata-imports\psc\streetzips.txt", false, Encoding.UTF8))
 	{
 		foreach (var street in zipsForStreet.OrderBy(p => p.Key))
 		{
@@ -117,13 +133,13 @@ void Main()
 
 	foreach (var group in zipsForStreet.OrderBy(p => p.Key).Select((p, i) => (Key: p.Key, Value: p.Value, Index: i)).GroupBy(p => p.Index / 2000))
 	{
-		using (var output = new StreamWriter($@"y:\wikidata-imports\psc\import-qs\{group.Key}.tsv", false, Encoding.UTF8))
+		using (var output = new StreamWriter($@"y:\_mine\wikidata-imports\psc\import-qs\{group.Key}.tsv", false, Encoding.UTF8))
 		{
 			foreach (var street in group)
 			{
 				foreach (var zip in street.Value.OrderBy(v => v))
 				{
-					output.WriteLine($"{street.Key}\tP281\t\"{zip}\"\tS248\tQ12049125\tS577\t+2019-06-30T00:00:00Z/11\tS854\t\"http://vdp.cuzk.cz/vymenny_format/csv/20190630_OB_ADR_csv.zip\"\tS813\t+2019-07-13T00:00:00Z/11");
+					output.WriteLine($"{street.Key}\tP281\t\"{zip}\"\tS248\tQ12049125\tS577\t+2019-11-30T00:00:00Z/11\tS854\t\"http://vdp.cuzk.cz/vymenny_format/csv/20191130_OB_ADR_csv.zip\"\tS813\t+2019-12-17T00:00:00Z/11");
 				}
 			}
 		}
