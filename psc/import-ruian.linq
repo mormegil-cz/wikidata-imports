@@ -11,12 +11,16 @@ void Main()
 {
 	var cp1250 = Encoding.GetEncoding(1250);
 	
+	// RUIAN -> QID
 	var itemForRuian = new Dictionary<int, string>();
+	// RUIAN -> [known PSČ]
 	var itemsWithZips = new Dictionary<int, HashSet<string>>();
+	// QID -> [new/missing PSČ]
 	var zipsForStreet = new Dictionary<string, HashSet<string>>();
+	// [unknown RUIAN]
 	var unknownRuianIDs = new HashSet<int>();
 
-	ReadWikidataJson(@"y:\_mine\wikidata-imports\psc\wikidata-ruian-without-zip.json", reader =>
+	ReadWikidataJson(@"y:\wikidata-imports\psc\wikidata-ruian-without-zip.json", reader =>
 	{
 		var itemUri = ReadProperty(reader, "item", "uri");
 		var ruian = ReadProperty(reader, "ruian", "literal");
@@ -24,7 +28,7 @@ void Main()
 		itemForRuian.Add(Int32.Parse(ruian, CultureInfo.InvariantCulture), qid);
 	});
 
-	ReadWikidataJson(@"y:\_mine\wikidata-imports\psc\wikidata-ruian-with-zip.json", reader =>
+	ReadWikidataJson(@"y:\wikidata-imports\psc\wikidata-ruian-with-zip.json", reader =>
 	{
 		var itemUri = ReadProperty(reader, "item", "uri");
 		var ruian = ReadProperty(reader, "ruian", "literal");
@@ -49,13 +53,24 @@ void Main()
 		zipList.Add(CleanZip(zipCode));
 	});
 
-	var itemsWithZipsRemaining = new Dictionary<int, HashSet<string>>(itemsWithZips.Count);
+	// QID -> [currently known/remaining ZIP]
+	var itemsWithZipsRemaining = new Dictionary<String, HashSet<string>>(itemsWithZips.Count);
 	foreach(var s in itemsWithZips)
 	{
-		itemsWithZipsRemaining.Add(s.Key, new HashSet<string>(s.Value));
+		if (!itemForRuian.TryGetValue(s.Key, out var qid))
+		{
+			Console.WriteLine("Unknown RUIAN {0}!?", s.Key);
+			continue;
+		}
+		if (!itemsWithZipsRemaining.TryGetValue(qid, out var set))
+		{
+			set = new HashSet<string>(s.Value.Count + 1);
+			itemsWithZipsRemaining.Add(qid, set);
+		}
+		set.UnionWith(s.Value);
 	}
 
-	using (var zip = ZipFile.OpenRead(@"y:\_mine\wikidata-imports\psc\20191130_OB_ADR_csv.zip"))
+	using (var zip = ZipFile.OpenRead(@"y:\wikidata-imports\psc\20200831_OB_ADR_csv.zip"))
 	{
 		foreach (var entry in zip.Entries)
 		{
@@ -77,20 +92,6 @@ void Main()
 					var streetID = Int32.Parse(streetIDStr, CultureInfo.InvariantCulture);
 					var cleanZip = CleanZip(zipCode);
 
-					if (itemsWithZips.TryGetValue(streetID, out var alreadyZipSet))
-					{
-						if (!alreadyZipSet.Contains(cleanZip))
-						{
-							alreadyZipSet.Add(cleanZip);
-							Console.WriteLine("ZIP {0} is missing for street ID {1}", zipCode, streetID);
-						}
-						else
-						{
-							itemsWithZipsRemaining[streetID].Remove(cleanZip);
-						}
-						continue;
-					}
-
 					if (!itemForRuian.TryGetValue(streetID, out var qid))
 					{
 						if (!unknownRuianIDs.Contains(streetID))
@@ -100,30 +101,45 @@ void Main()
 						}
 						continue;
 					}
+
+					if (itemsWithZips.TryGetValue(streetID, out var alreadyZipSet))
+					{
+						if (!alreadyZipSet.Contains(cleanZip))
+						{
+							alreadyZipSet.Add(cleanZip);
+							Console.WriteLine("ZIP {0} is missing for street ID {1}", zipCode, streetID);
+						}
+						else
+						{
+							itemsWithZipsRemaining[qid].Remove(cleanZip);
+							continue;
+						}
+					}
 	
 					if (!zipsForStreet.TryGetValue(qid, out var zipList))
 					{
 						zipList = new HashSet<string>(1);
 						zipsForStreet.Add(qid, zipList);
 					}
+					Console.WriteLine("Adding ZIP {0} for street ID {1} ({2})", zipCode, streetID, qid);
 					zipList.Add(FormatZip(zipCode));
 				}
 			}
 		}
 	}
-	using (var output = new StreamWriter(@"y:\_mine\wikidata-imports\psc\import-qs\removals.tsv", false, Encoding.UTF8))
+	using (var output = new StreamWriter(@"y:\wikidata-imports\psc\import-qs\removals.tsv", false, Encoding.UTF8))
 	{
 		foreach (var e in itemsWithZipsRemaining.Where(r => r.Value.Count > 0))
 		{
 			Console.WriteLine("Street {0} has zips {1} it should not have", e.Key, String.Join(", ", e.Value));
 			foreach (var zip in e.Value)
 			{
-				output.WriteLine($"-{itemForRuian[e.Key]}\tP281\t\"{FormatZip(zip)}\"");
+				output.WriteLine($"-{e.Key}\tP281\t\"{FormatZip(zip)}\"");
 			}
 		}
 	}
 
-	using (var output = new StreamWriter(@"y:\_mine\wikidata-imports\psc\streetzips.txt", false, Encoding.UTF8))
+	using (var output = new StreamWriter(@"y:\wikidata-imports\psc\streetzips.txt", false, Encoding.UTF8))
 	{
 		foreach (var street in zipsForStreet.OrderBy(p => p.Key))
 		{
@@ -133,13 +149,13 @@ void Main()
 
 	foreach (var group in zipsForStreet.OrderBy(p => p.Key).Select((p, i) => (Key: p.Key, Value: p.Value, Index: i)).GroupBy(p => p.Index / 2000))
 	{
-		using (var output = new StreamWriter($@"y:\_mine\wikidata-imports\psc\import-qs\{group.Key}.tsv", false, Encoding.UTF8))
+		using (var output = new StreamWriter($@"y:\wikidata-imports\psc\import-qs\{group.Key}.tsv", false, Encoding.UTF8))
 		{
 			foreach (var street in group)
 			{
 				foreach (var zip in street.Value.OrderBy(v => v))
 				{
-					output.WriteLine($"{street.Key}\tP281\t\"{zip}\"\tS248\tQ12049125\tS577\t+2019-11-30T00:00:00Z/11\tS854\t\"http://vdp.cuzk.cz/vymenny_format/csv/20191130_OB_ADR_csv.zip\"\tS813\t+2019-12-17T00:00:00Z/11");
+					output.WriteLine($"{street.Key}\tP281\t\"{zip}\"\tS248\tQ12049125\tS577\t+2020-08-31T00:00:00Z/11\tS854\t\"http://vdp.cuzk.cz/vymenny_format/csv/20200831_OB_ADR_csv.zip\"\tS813\t+2020-09-09T00:00:00Z/11");
 				}
 			}
 		}
