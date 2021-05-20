@@ -7,6 +7,11 @@
   <Namespace>Newtonsoft.Json</Namespace>
 </Query>
 
+const string PATH = @"y:\_mine\wikidata-imports\psc\";
+const string IMPORT_CSV = @"20210430_OB_ADR_csv.zip";
+const string IMPORT_CSV_DATE = "2021-04-30";
+const string IMPORT_DATE = "2021-05-20";
+
 void Main()
 {
 	var cp1250 = Encoding.GetEncoding(1250);
@@ -20,7 +25,7 @@ void Main()
 	// [unknown RUIAN]
 	var unknownRuianIDs = new HashSet<int>();
 
-	ReadWikidataJson(@"y:\wikidata-imports\psc\wikidata-ruian-without-zip.json", reader =>
+	ReadWikidataJson(PATH + @"wikidata-ruian-without-zip.json", reader =>
 	{
 		var itemUri = ReadProperty(reader, "item", "uri");
 		var ruian = ReadProperty(reader, "ruian", "literal");
@@ -28,7 +33,7 @@ void Main()
 		itemForRuian.Add(Int32.Parse(ruian, CultureInfo.InvariantCulture), qid);
 	});
 
-	ReadWikidataJson(@"y:\wikidata-imports\psc\wikidata-ruian-with-zip.json", reader =>
+	ReadWikidataJson(PATH + @"wikidata-ruian-with-zip.json", reader =>
 	{
 		var itemUri = ReadProperty(reader, "item", "uri");
 		var ruian = ReadProperty(reader, "ruian", "literal");
@@ -70,7 +75,7 @@ void Main()
 		set.UnionWith(s.Value);
 	}
 
-	using (var zip = ZipFile.OpenRead(@"y:\wikidata-imports\psc\20200831_OB_ADR_csv.zip"))
+	using (var zip = ZipFile.OpenRead(PATH + IMPORT_CSV))
 	{
 		foreach (var entry in zip.Entries)
 		{
@@ -127,7 +132,7 @@ void Main()
 			}
 		}
 	}
-	using (var output = new StreamWriter(@"y:\wikidata-imports\psc\import-qs\removals.tsv", false, Encoding.UTF8))
+	using (var output = new StreamWriter(PATH + @"import-qs\removals.tsv", false, Encoding.UTF8))
 	{
 		foreach (var e in itemsWithZipsRemaining.Where(r => r.Value.Count > 0))
 		{
@@ -139,7 +144,7 @@ void Main()
 		}
 	}
 
-	using (var output = new StreamWriter(@"y:\wikidata-imports\psc\streetzips.txt", false, Encoding.UTF8))
+	using (var output = new StreamWriter(PATH + @"streetzips.txt", false, Encoding.UTF8))
 	{
 		foreach (var street in zipsForStreet.OrderBy(p => p.Key))
 		{
@@ -149,13 +154,13 @@ void Main()
 
 	foreach (var group in zipsForStreet.OrderBy(p => p.Key).Select((p, i) => (Key: p.Key, Value: p.Value, Index: i)).GroupBy(p => p.Index / 2000))
 	{
-		using (var output = new StreamWriter($@"y:\wikidata-imports\psc\import-qs\{group.Key}.tsv", false, Encoding.UTF8))
+		using (var output = new StreamWriter(PATH + $@"import-qs\{group.Key}.tsv", false, Encoding.UTF8))
 		{
 			foreach (var street in group)
 			{
 				foreach (var zip in street.Value.OrderBy(v => v))
 				{
-					output.WriteLine($"{street.Key}\tP281\t\"{zip}\"\tS248\tQ12049125\tS577\t+2020-08-31T00:00:00Z/11\tS854\t\"http://vdp.cuzk.cz/vymenny_format/csv/20200831_OB_ADR_csv.zip\"\tS813\t+2020-09-09T00:00:00Z/11");
+					output.WriteLine($"{street.Key}\tP281\t\"{zip}\"\tS248\tQ12049125\tS577\t+{IMPORT_CSV_DATE}T00:00:00Z/11\tS854\t\"https://vdp.cuzk.cz/vymenny_format/csv/{IMPORT_CSV}\"\tS813\t+{IMPORT_DATE}T00:00:00Z/11");
 				}
 			}
 		}
