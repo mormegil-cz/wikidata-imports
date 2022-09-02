@@ -10,6 +10,10 @@ namespace ProcessPropertyHistory
 
         static void Main(string[] args)
         {
+        }
+
+        private static void ProcessFile()
+        {
             using var fileReader = new StreamReader(@"\wikidata-imports\ProcessPropertyHistory\Template_Property_uses.xml");
             using var reader = XmlReader.Create(fileReader);
             Expect(reader, XmlNodeType.Element, "mediawiki");
@@ -25,6 +29,7 @@ namespace ProcessPropertyHistory
             reader.Skip();
             Expect(reader, XmlNodeType.Element, "id");
             reader.Skip();
+            int entries = 0;
             while (reader.MoveToContent() == XmlNodeType.Element && reader.LocalName == "revision")
             {
                 reader.Read();
@@ -47,6 +52,7 @@ namespace ProcessPropertyHistory
                 Expect(reader, XmlNodeType.Element, "format");
                 reader.Skip();
                 var data = GetString(reader, "text");
+                ++entries;
                 Expect(reader, XmlNodeType.Element, "sha1");
                 reader.Skip();
                 reader.ReadEndElement();
@@ -55,6 +61,8 @@ namespace ProcessPropertyHistory
             reader.ReadEndElement();
             Expect(reader, XmlNodeType.EndElement, "mediawiki");
             reader.ReadEndElement();
+
+            Console.WriteLine(entries);
         }
 
         private static void Expect(XmlReader reader, XmlNodeType nodeType, String name)

@@ -1,0 +1,29 @@
+{
+  "name": "volby",
+  "version": "1.0.0",
+  "description": "Process open data for Czech elections published at volby.cz",
+  "main": "import.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mormegil-cz/wikidata-imports.git"
+  },
+  "keywords": [
+    "volby.cz",
+    "open-data",
+    "czech"
+  ],
+  "author": "Mormegil <mormegil@centrum.cz>",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/mormegil-cz/wikidata-imports/issues"
+  },
+  "homepage": "https://github.com/mormegil-cz/wikidata-imports#readme",
+  "dependencies": {
+    "dbf-reader": "^1.0.3",
+    "iconv-lite": "^0.6.3",
+    "xml-reader": "^2.4.3"
+  }
+}
