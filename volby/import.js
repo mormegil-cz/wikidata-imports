@@ -46,7 +46,92 @@ importXml('data/ep/ep2009-eprk.xml', 'ep2009', 'EP_REGKAND_ROW', [['ESTRANA'], l
 importXml('data/ep/ep2014-eprk.xml', 'ep2014', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2014-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/ep/ep2019-eprk.xml', 'ep2019', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2019-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
-console.log(participations);
+const partyCodebook = importXmlCodebook('data/current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']);
+
+const partyType = {
+    'S': 'politická strana, hnutí',
+    'K': 'koalice',
+    'N': 'samostatný nezávislý kandidát',
+    'M': 'sdružení nezávislých kandidátů',
+    'D': 'sdružení nezávislých kandidátů a politických stran, hnutí'
+};
+
+// console.log(participations);
+
+for (const partyId of Object.keys(participations)) {
+    const partyInfo = partyCodebook[partyId];
+    if (!partyInfo) {
+        console.error(`No party data for ${partyId}`);
+        continue;
+    }
+    let output = [];
+
+    output.push(```
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <title>${escapeHtml(partyInfo[0])} – účast ve volbách</title>
+</head>
+<body>
+  <h1>${escapeHtml(partyInfo[0])}</h1>
+
+  <dl>
+    <dt>Zkrácený název volební strany (50 znaků)</dt>
+    <dd>${escapeHtml(partyInfo[1])}</dd>
+    <dt>Zkrácený název (30 znaků)</dt>
+    <dd>${escapeHtml(partyInfo[2])}</dd>
+    <dt>Zkratka názvu (8 znaků)</dt>
+    <dd>${escapeHtml(partyInfo[3])}</dd>
+    <dt>Oficiální zkratka názvu volební strany</dt>
+    <dd>${escapeHtml(partyInfo[4])}</dd>
+    <dt>Typ volební strany</dt>
+    <dd>${partyType[partyInfo[6]] || '?'}</dd>
+```);
+
+    const partyCount = +partyInfo[5];
+    if (partyCount > 1) {
+        output.push(```
+    <dt>Počet politických subjektů ve složení volební strany</dt>
+    <dd>${partyCount}</dd>
+```);
+    }
+
+    output.push(```
+  </dl>
+
+  <h2>Účast ve volbách</h2>
+  <ul>
+```);
+
+    const elections = participations[partyId];
+    for (let electionId of Object.keys(elections)) {
+        const electionFlags = elections[electionId];
+        output.push(```
+    <li>${electionid}: ${JSON.stringify(electionFlags)}</li>
+```);
+    }
+
+
+
+    output.push(```
+  </ul>
+</body>
+</html>
+```);
+
+    fs.writeFileSync(`output/${partyId}.htm`, output.join(''));
+
+    return;
+}
+
+function escapeHtml(s) {
+    return s.replace(/&/g, '&amp;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+}
 
 function importDbf(filename, electionId, candidateCol, memberCol, nominatingCol) {
     const buffer = fs.readFileSync(filename);
@@ -117,6 +202,26 @@ function processMappingXmlRow(filename, row, sourceElems, targetElem, conversion
         return;
     }
     conversionTable[source] = target;
+}
+
+function importXmlCodebook(filename, rowElem, idElem, dataElems) {
+    console.debug(`Loading XML codebook from ${filename}`);
+    const reader = XmlReader.create({ stream: true, emitTopLevelOnly: true, parentNodes: false });
+    let codebook = {};
+    reader.on('tag:' + rowElem, row => processCodebookXmlRow(filename, row, idElem, dataElems, codebook));
+    const buffer = fs.readFileSync(filename);
+    reader.parse(iconv.decode(buffer, 'windows-1250'));
+    return codebook;
+}
+
+function processCodebookXmlRow(filename, row, idElem, dataElems, codebook) {
+    const id = findXmlTextNode(row, idElem);
+    const data = dataElems.map(dataElem => findXmlTextNode(row, dataElem));
+    if (codebook[id]) {
+        console.warn(`Duplicate value for ${idElem}=${id} in ${filename}`);
+        return;
+    }
+    codebook[id] = data;
 }
 
 function importXml(filename, electionId, rowElem, candidateElem, memberElem, nominatingElem) {
