@@ -32,7 +32,11 @@ importDbf('data/kz/kz2012-kzrk.dbf', 'kz2012', 'KSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/kz/kz2016-kzrk.xml', 'kz2016', 'KZ_REGKAND_ROW', 'KSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/kz/kz2020-kzrk.xml', 'kz2020', 'KZ_REGKAND_ROW', 'KSTRANA', 'PSTRANA', 'NSTRANA');
 
-importXml('data/kv/kz2006-kvrk.xml', 'kv2006', 'KV_REGKAND_ROW', 'OSTRANA', 'PSTRANA', 'NSTRANA'); ***TODO: remap OSTRANA via kv2006-kvros.xml
+importXml('data/kv/kv2006-kvrk.xml', 'kv2006', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA'], loadXmlMapping('data/kv/kv2006-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/kv/kv2010-kvrk.xml', 'kv2010', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA'], loadXmlMapping('data/kv/kv2010-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/kv/kv2014-kvrk.xml', 'kv2014', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA'], loadXmlMapping('data/kv/kv2014-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/kv/kv2018-kvrk.xml', 'kv2018', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA'], loadXmlMapping('data/kv/kv2018-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/kv/kv2022-kvrk.xml', 'kv2022', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA'], loadXmlMapping('data/kv/kv2022-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
 console.log(participations);
 
@@ -51,7 +55,30 @@ function importDbf(filename, electionId, candidateCol, memberCol, nominatingCol)
     });
 }
 
+function loadXmlMapping(filename, rowElem, sourceElems, targetElem) {
+    console.debug(`Loading XML mapping from ${filename}`);
+    const reader = XmlReader.create({ stream: true, emitTopLevelOnly: true, parentNodes: false });
+    let conversionTable = {};
+    reader.on('tag:' + rowElem, row => processMappingXmlRow(filename, row, sourceElems, targetElem, conversionTable));
+    const buffer = fs.readFileSync(filename);
+    reader.parse(iconv.decode(buffer, 'windows-1250'));
+    console.debug(`Loaded ${Object.keys(conversionTable).length} items`);
+    return src => conversionTable[src];
+}
+
+function processMappingXmlRow(filename, row, sourceElems, targetElem, conversionTable) {
+    const sourceIds = sourceElems.map(sourceElem => findXmlTextNode(row, sourceElem));
+    const source = sourceIds.join(':');
+    const target = findXmlTextNode(row, targetElem);
+    if (conversionTable[source]) {
+        console.warn(`Duplicate value for ${sourceElem}=${source} in ${filename}`);
+        return;
+    }
+    conversionTable[source] = target;
+}
+
 function importXml(filename, electionId, rowElem, candidateElem, memberElem, nominatingElem) {
+    console.debug(`Importing ${filename}`);
     const reader = XmlReader.create({ stream: true, emitTopLevelOnly: true, parentNodes: false });
     reader.on('tag:' + rowElem, row => processXmlRow(row, electionId, candidateElem, memberElem, nominatingElem));
     const buffer = fs.readFileSync(filename);
@@ -59,13 +86,33 @@ function importXml(filename, electionId, rowElem, candidateElem, memberElem, nom
 }
 
 function processXmlRow(row, electionId, candidateElem, memberElem, nominatingElem) {
-    const candidate = findXmlTextNode(row, candidateElem);
-    const member = findXmlTextNode(row, memberElem);
-    const nominating = findXmlTextNode(row, nominatingElem);
+    processXmlElement(row, candidateElem, electionId, 'candidate');
+    processXmlElement(row, memberElem, electionId, 'member');
+    processXmlElement(row, nominatingElem, electionId, 'nominating');
+}
 
-    recordParticipation(candidate, electionId, 'candidate');
-    recordParticipation(member, electionId, 'member');
-    recordParticipation(nominating, electionId, 'nominating');
+function processXmlElement(row, elemInfo, electionId, participationKind) {
+    let partyId;
+    if (Array.isArray(elemInfo)) {
+        elemNames = elemInfo[0];
+        mappingFunction = elemInfo[1];
+
+        const idParts = elemNames.map(elemName => findXmlTextNode(row, elemName));
+        const id = idParts.join(':');
+        partyId = mappingFunction(id);
+        if (!partyId) {
+            console.warn(`Unable to map ${id}`);
+            return;
+        }
+    } else {
+        partyId = findXmlTextNode(row, elemInfo);
+        if (!partyId) {
+            // possibly “candidate removed by registration authority”
+            // console.debug(`No ${elemInfo} found in ${electionId}: ${JSON.stringify(row)}`);
+            return;
+        }
+    }
+    recordParticipation(partyId, electionId, participationKind);
 }
 
 function findXmlTextNode(row, elem) {
@@ -81,7 +128,7 @@ function findXmlTextNode(row, elem) {
 
 function recordParticipation(partyId, electionId, participationKind) {
     if (!partyId) {
-        console.warn(electionId, participationKind);
+        console.warn(`Missing party ID for ${participationKind} in ${electionId}`);
         return;
     }
     let partyParticipation = participations[partyId] || {};
