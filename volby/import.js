@@ -38,6 +38,11 @@ importXml('data/kv/kv2014-kvrk.xml', 'kv2014', 'KV_REGKAND_ROW', [['KODZASTUP', 
 importXml('data/kv/kv2018-kvrk.xml', 'kv2018', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA'], loadXmlMapping('data/kv/kv2018-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/kv/kv2022-kvrk.xml', 'kv2022', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA'], loadXmlMapping('data/kv/kv2022-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
+importXml('data/ep/ep2004-eprk.xml', 'ep2004', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2004-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/ep/ep2009-eprk.xml', 'ep2009', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2009-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/ep/ep2014-eprk.xml', 'ep2014', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2014-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/ep/ep2019-eprk.xml', 'ep2019', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2019-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+
 console.log(participations);
 
 function importDbf(filename, electionId, candidateCol, memberCol, nominatingCol) {

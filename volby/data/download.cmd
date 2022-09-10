@@ -21,6 +21,10 @@ call :process "https://www.volby.cz/opendata/kv2014/KV2014reg20141014.zip" "kv" 
 call :process "https://www.volby.cz/opendata/kv2018/KV2018reg20181008.zip" "kv" "kvrk.xml" "kv2018-kvrk.xml" "kvros.xml" "kv2018-kvros.xml"
 call :process "https://www.volby.cz/opendata/kv2022/KV2022reg20220902.zip" "kv" "kvrk.xml" "kv2022-kvrk.xml" "kvros.xml" "kv2022-kvros.xml"
 
+call :process "https://www.volby.cz/opendata/ep2004/EP2004reg.zip" "ep" "eprk.xml" "ep2004-eprk.xml" "eprkl.xml" "ep2004-eprkl.xml"
+call :process "https://www.volby.cz/opendata/ep2009/EP2009reg.zip" "ep" "eprk.xml" "ep2009-eprk.xml" "eprkl.xml" "ep2009-eprkl.xml"
+call :process "https://www.volby.cz/opendata/ep2014/EP2014reg20140525.zip" "ep" "eprk.xml" "ep2014-eprk.xml" "eprkl.xml" "ep2014-eprkl.xml"
+call :process "https://www.volby.cz/opendata/ep2019/EP2019reg20190526.zip" "ep" "eprk.xml" "ep2019-eprk.xml" "eprkl.xml" "ep2019-eprkl.xml"
 
 
 
