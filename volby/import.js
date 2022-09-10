@@ -5,6 +5,9 @@ const iconv = require('iconv-lite');
 
 let participations = {};
 
+importXml('data/prez/prez2013-perk.xml', 'prez2013', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
+importXml('data/prez/prez2018-perk.xml', 'prez2018', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
+
 importDbf('data/ps/ps2006-psrk.dbf', 'ps2006', 'KSTRANA', 'PSTRANA', 'NSTRANA');
 importDbf('data/ps/ps2010-psrk.dbf', 'ps2010', 'KSTRANA', 'PSTRANA', 'NSTRANA');
 importDbf('data/ps/ps2013-psrk.dbf', 'ps2013', 'KSTRANA', 'PSTRANA', 'NSTRANA');
@@ -27,10 +30,10 @@ importXml('data/se/se2020cerven-serk.xml', 'se2020cerven', 'SE_REGKAND_ROW', 'VS
 importXml('data/se/se2020-serk.xml', 'se2020', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2022-serk.xml', 'se2022', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 
-importDbf('data/kz/kz2008-kzrk.dbf', 'kz2008', 'KSTRANA', 'PSTRANA', 'NSTRANA');
-importDbf('data/kz/kz2012-kzrk.dbf', 'kz2012', 'KSTRANA', 'PSTRANA', 'NSTRANA');
-importXml('data/kz/kz2016-kzrk.xml', 'kz2016', 'KZ_REGKAND_ROW', 'KSTRANA', 'PSTRANA', 'NSTRANA');
-importXml('data/kz/kz2020-kzrk.xml', 'kz2020', 'KZ_REGKAND_ROW', 'KSTRANA', 'PSTRANA', 'NSTRANA');
+importDbf('data/kz/kz2008-kzrk.dbf', 'kz2008', [['KRZAST', 'KSTRANA'], loadDbfMapping('data/kz/kz2008-kzrkl.dbf', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importDbf('data/kz/kz2012-kzrk.dbf', 'kz2012', [['KRZAST', 'KSTRANA'], loadDbfMapping('data/kz/kz2012-kzrkl.dbf', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/kz/kz2016-kzrk.xml', 'kz2016', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2016-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/kz/kz2020-kzrk.xml', 'kz2020', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2020-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
 importXml('data/kv/kv2006-kvrk.xml', 'kv2006', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA'], loadXmlMapping('data/kv/kv2006-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/kv/kv2010-kvrk.xml', 'kv2010', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA'], loadXmlMapping('data/kv/kv2010-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
@@ -43,9 +46,6 @@ importXml('data/ep/ep2009-eprk.xml', 'ep2009', 'EP_REGKAND_ROW', [['ESTRANA'], l
 importXml('data/ep/ep2014-eprk.xml', 'ep2014', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2014-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/ep/ep2019-eprk.xml', 'ep2019', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2019-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
-importXml('data/prez/prez2013-perk.xml', 'prez2013', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
-importXml('data/prez/prez2018-perk.xml', 'prez2018', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
-
 console.log(participations);
 
 function importDbf(filename, electionId, candidateCol, memberCol, nominatingCol) {
@@ -53,14 +53,44 @@ function importDbf(filename, electionId, candidateCol, memberCol, nominatingCol)
     const datatable = Dbf.read(buffer);
     if (!datatable) throw new Error('Error reading ' + filename);
     datatable.rows.forEach(row => {
-        let candidate = row[candidateCol];
-        let member = row[memberCol];
-        let nominating = row[nominatingCol];
-
-        recordParticipation(candidate, electionId, 'candidate');
-        recordParticipation(member, electionId, 'member');
-        recordParticipation(nominating, electionId, 'nominating');
+        processDbfColumn(row, candidateCol, electionId, 'candidate');
+        processDbfColumn(row, memberCol, electionId, 'member');
+        processDbfColumn(row, nominatingCol, electionId, 'nominating');
     });
+}
+
+function processDbfColumn(row, col, electionId, participationKind) {
+    const partyId = row[col];
+    if (!partyId) {
+        // possibly “candidate removed by registration authority”
+        // console.debug(`No ${col} found in ${electionId}: ${JSON.stringify(row)}`);
+        return;
+    }
+    recordParticipation(partyId, electionId, participationKind);
+}
+
+function loadDbfMapping(filename, sourceElems, targetElem) {
+    console.debug(`Loading DBF mapping from ${filename}`);
+    const buffer = fs.readFileSync(filename);
+    const datatable = Dbf.read(buffer);
+    if (!datatable) throw new Error('Error reading ' + filename);
+    let conversionTable = {};
+    datatable.rows.forEach(row => {
+        const sourceIds = sourceElems.map(sourceElem => row[sourceElem]);
+        const source = sourceIds.join(':');
+        const target = row[targetElem];
+        if (conversionTable[source]) {
+            console.warn(`Duplicate value for ${sourceElem}=${source} in ${filename}`);
+            return;
+        }
+        if (!target) {
+            console.warn(`No value for ${sourceElem}=${source} in ${filename}`);
+            return;
+        }
+        conversionTable[source] = target;
+    });
+    console.debug(`Loaded ${Object.keys(conversionTable).length} items`);
+    return src => conversionTable[src];
 }
 
 function loadXmlMapping(filename, rowElem, sourceElems, targetElem) {
@@ -80,6 +110,10 @@ function processMappingXmlRow(filename, row, sourceElems, targetElem, conversion
     const target = findXmlTextNode(row, targetElem);
     if (conversionTable[source]) {
         console.warn(`Duplicate value for ${sourceElem}=${source} in ${filename}`);
+        return;
+    }
+    if (!target) {
+        console.warn(`No value for ${sourceElem}=${source} in ${filename}`);
         return;
     }
     conversionTable[source] = target;
