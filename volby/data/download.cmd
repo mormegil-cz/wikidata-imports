@@ -26,6 +26,8 @@ call :process "https://www.volby.cz/opendata/ep2009/EP2009reg.zip" "ep" "eprk.xm
 call :process "https://www.volby.cz/opendata/ep2014/EP2014reg20140525.zip" "ep" "eprk.xml" "ep2014-eprk.xml" "eprkl.xml" "ep2014-eprkl.xml"
 call :process "https://www.volby.cz/opendata/ep2019/EP2019reg20190526.zip" "ep" "eprk.xml" "ep2019-eprk.xml" "eprkl.xml" "ep2019-eprkl.xml"
 
+call :process "https://www.volby.cz/opendata/prez2013/PREZ2013reg20130126.zip" "prez" "perk.xml" "prez2013-perk.xml"
+call :process "https://www.volby.cz/opendata/prez2018/PREZ2018reg20180127.zip" "prez" "perk.xml" "prez2018-perk.xml"
 
 
 goto :eof

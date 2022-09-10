@@ -43,6 +43,9 @@ importXml('data/ep/ep2009-eprk.xml', 'ep2009', 'EP_REGKAND_ROW', [['ESTRANA'], l
 importXml('data/ep/ep2014-eprk.xml', 'ep2014', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2014-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/ep/ep2019-eprk.xml', 'ep2019', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2019-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
+importXml('data/prez/prez2013-perk.xml', 'prez2013', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
+importXml('data/prez/prez2018-perk.xml', 'prez2018', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
+
 console.log(participations);
 
 function importDbf(filename, electionId, candidateCol, memberCol, nominatingCol) {
@@ -97,6 +100,8 @@ function processXmlRow(row, electionId, candidateElem, memberElem, nominatingEle
 }
 
 function processXmlElement(row, elemInfo, electionId, participationKind) {
+    if (!elemInfo) return;
+
     let partyId;
     if (Array.isArray(elemInfo)) {
         elemNames = elemInfo[0];
