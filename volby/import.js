@@ -23,6 +23,7 @@ importXml('data/se/se2014zari-serk.xml', 'se2014zari', 'SE_REGKAND_ROW', 'VSTRAN
 importXml('data/se/se2014-serk.xml', 'se2014', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2016-serk.xml', 'se2016', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2017-serk.xml', 'se2017', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
+importXml('data/se/se2018leden-serk.xml', 'se2018leden', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2018kveten-serk.xml', 'se2018kveten', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2018-serk.xml', 'se2018', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2019-serk.xml', 'se2019', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
@@ -46,7 +47,53 @@ importXml('data/ep/ep2009-eprk.xml', 'ep2009', 'EP_REGKAND_ROW', [['ESTRANA'], l
 importXml('data/ep/ep2014-eprk.xml', 'ep2014', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2014-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/ep/ep2019-eprk.xml', 'ep2019', 'EP_REGKAND_ROW', [['ESTRANA'], loadXmlMapping('data/ep/ep2019-eprkl.xml', 'EP_RKL_ROW', ['ESTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
+// console.log(participations);
+
 const partyCodebook = importXmlCodebook('data/current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']);
+
+const electionCodebook = {
+    'prez2013': { title: 'Volba prezidenta republiky konaná ve dnech 11.01. – 12.01.2013', link: 'https://www.volby.cz/pls/prez2013/pe', date: '20130111' },
+    'prez2018': { title: 'Volba prezidenta republiky konaná ve dnech 12.01. – 13.01.2018', link: 'https://www.volby.cz/pls/prez2018/pe', date: '20180112' },
+
+    'ps2006': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 02.06. – 03.06.2006', link: 'https://www.volby.cz/pls/ps2006/ps?xjazyk=CZ', date: '20060602' },
+    'ps2010': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 28.05. – 29.05.2010', link: 'https://www.volby.cz/pls/ps2010/ps?xjazyk=CZ', date: '20100528' },
+    'ps2013': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 25.10. – 26.10.2013', link: 'https://www.volby.cz/pls/ps2013/ps?xjazyk=CZ', date: '20131025' },
+    'ps2017nss': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 20.10. – 21.10.2017', link: 'https://www.volby.cz/pls/ps2017nss/ps?xjazyk=CZ', date: '20171020' },
+    'ps2021': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 8.10. – 9.10.2021', link: 'https://www.volby.cz/pls/ps2021/ps?xjazyk=CZ', date: '20211008' },
+
+    'se2008': { title: 'Volby do Senátu Parlamentu ČR konané dne 17.10. – 18.10.2008', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20081017', date: '20081017' },
+    'se2010': { title: 'Volby do Senátu Parlamentu ČR konané dne 15.10. – 16.10.2010', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20101015', date: '20101015' },
+    'se2011': { title: 'Doplňovací volby do Senátu Parlamentu ČR konané dne 18.3. – 19.3.2011', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20110318', date: '20110318' },
+    'se2012': { title: 'Volby do Senátu Parlamentu ČR konané dne 12.10. – 13.10.2012', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20121012', date: '20121012' },
+    'se2014leden': { title: 'Doplňovací volby do Senátu Parlamentu ČR konané dne 10.1. – 11.1.2014', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20140110', date: '20140110' },
+    'se2014zari': { title: 'Doplňovací volby do Senátu Parlamentu ČR konané dne 19.9. – 20.9.2014', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20140919', date: '20140919' },
+    'se2014': { title: 'Volby do Senátu Parlamentu ČR konané dne 10.10. – 11.10.2014', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20141010', date: '20141010' },
+    'se2016': { title: 'Volby do Senátu Parlamentu ČR konané dne 7.10. – 8.10.2016', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20161007', date: '20161007' },
+    'se2017': { title: 'Opakované volby do Senátu Parlamentu ČR konané dne 27.1. – 28.1.2017', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20170127', date: '20170127' },
+    'se2018leden': { title: 'Doplňovací volby do Senátu Parlamentu ČR konané dne 5.1. – 6.1.2018', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20180105', date: '20180105' },
+    'se2018kveten': { title: 'Doplňovací volby do Senátu Parlamentu ČR konané dne 18.5. – 19.5.2018', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20180518', date: '20180518' },
+    'se2018': { title: 'Volby do Senátu Parlamentu ČR konané dne 5.10. – 6.10.2018', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20181005', date: '20181005' },
+    'se2019': { title: 'Doplňovací volby do Senátu Parlamentu ČR konané dne 5.4. – 6.4.2019', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20190405', date: '20190405' },
+    'se2020cerven': { title: 'Doplňovací volby do Senátu Parlamentu ČR konané dne 5.6. – 6.6.2020', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20200605', date: '20200605' },
+    'se2020': { title: 'Volby do Senátu Parlamentu ČR konané dne 2.10. – 3.10.2020', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20201002', date: '20201002' },
+    'se2022': { title: 'Volby do Senátu Parlamentu ČR konané dne 23.9. – 24.9.2022', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20220923', date: '20220923' },
+
+    'kz2008': { title: 'Volby do zastupitelstev krajů konané dne 17.10. – 18.10.2008', link: 'https://www.volby.cz/pls/kz2008/kz?xjazyk=CZ&xdatum=20081017', date: '20081017' },
+    'kz2012': { title: 'Volby do zastupitelstev krajů konané dne 12.10. – 13.10.2012', link: 'https://www.volby.cz/pls/kz2012/kz?xjazyk=CZ&xdatum=20121012', date: '20121012' },
+    'kz2016': { title: 'Volby do zastupitelstev krajů konané dne 7.10. – 8.10.2016', link: 'https://www.volby.cz/pls/kz2016/kz?xjazyk=CZ&xdatum=20161007', date: '20161007' },
+    'kz2020': { title: 'Volby do zastupitelstev krajů konané dne 2.10. – 3.10.2020', link: 'https://www.volby.cz/pls/kz2020/kz?xjazyk=CZ', date: '20201002' },
+
+    'kv2006': { title: 'Volby do zastupitelstev obcí 20.10. - 21.10.2006', link: 'https://www.volby.cz/pls/kv2006/kv?xjazyk=CZ&xid=1', date: '20061020' },
+    'kv2010': { title: 'Volby do zastupitelstev obcí 15.10. - 16.10.2010', link: 'https://www.volby.cz/pls/kv2010/kv?xjazyk=CZ&xid=1', date: '20101015' },
+    'kv2014': { title: 'Volby do zastupitelstev obcí 10.10. - 11.10.2014', link: 'https://www.volby.cz/pls/kv2014/kv?xjazyk=CZ&xid=1', date: '20141010' },
+    'kv2018': { title: 'Volby do zastupitelstev obcí 05.10. - 06.10.2018', link: 'https://www.volby.cz/pls/kv2018/kv?xjazyk=CZ&xid=1', date: '20181005' },
+    'kv2022': { title: 'Volby do zastupitelstev obcí konané 23.09. – 24.09.2022', link: 'https://www.volby.cz/pls/kv2022/kv?xjazyk=CZ&xid=1', date: '20220923' },
+
+    'ep2004': { title: 'Volby do Evropského parlamentu konané na území České republiky ve dnech 11.06. – 12.06.2004', link: 'https://www.volby.cz/pls/ep2004/ep?xjazyk=CZ', date: '20040611' },
+    'ep2009': { title: 'Volby do Evropského parlamentu konané na území České republiky ve dnech 05.06. – 06.06.2009', link: 'https://www.volby.cz/pls/ep2009/ep?xjazyk=CZ', date: '20090605' },
+    'ep2014': { title: 'Volby do Evropského parlamentu konané na území České republiky ve dnech 23.05. – 24.05.2014', link: 'https://www.volby.cz/pls/ep2014/ep?xjazyk=CZ', date: '20140523' },
+    'ep2019': { title: 'Volby do Evropského parlamentu konané na území České republiky ve dnech 24.05. – 25.05.2019', link: 'https://www.volby.cz/pls/ep2019/ep?xjazyk=CZ', date: '20190524' },
+};
 
 const partyType = {
     'S': 'politická strana, hnutí',
@@ -56,8 +103,6 @@ const partyType = {
     'D': 'sdružení nezávislých kandidátů a politických stran, hnutí'
 };
 
-// console.log(participations);
-
 for (const partyId of Object.keys(participations)) {
     const partyInfo = partyCodebook[partyId];
     if (!partyInfo) {
@@ -66,8 +111,7 @@ for (const partyId of Object.keys(participations)) {
     }
     let output = [];
 
-    output.push(```
-<!DOCTYPE html>
+    output.push(`<!DOCTYPE html>
 <html lang="cs">
 <head>
   <meta charset="utf-8">
@@ -76,57 +120,67 @@ for (const partyId of Object.keys(participations)) {
 <body>
   <h1>${escapeHtml(partyInfo[0])}</h1>
 
-  <dl>
-    <dt>Zkrácený název volební strany (50 znaků)</dt>
-    <dd>${escapeHtml(partyInfo[1])}</dd>
-    <dt>Zkrácený název (30 znaků)</dt>
-    <dd>${escapeHtml(partyInfo[2])}</dd>
-    <dt>Zkratka názvu (8 znaků)</dt>
-    <dd>${escapeHtml(partyInfo[3])}</dd>
-    <dt>Oficiální zkratka názvu volební strany</dt>
-    <dd>${escapeHtml(partyInfo[4])}</dd>
-    <dt>Typ volební strany</dt>
-    <dd>${partyType[partyInfo[6]] || '?'}</dd>
-```);
+  <dl>`);
+    addDef(output, 'Zkrácený název volební strany (50 znaků)', partyInfo[1]);
+    addDef(output, 'Zkrácený název (30 znaků)', partyInfo[2]);
+    addDef(output, 'Zkratka názvu (8 znaků)', partyInfo[3]);
+    addDef(output, 'Oficiální zkratka názvu volební strany', partyInfo[4]);
+    addDef(output, 'Typ volební strany', partyType[partyInfo[6]] || '?');
 
     const partyCount = +partyInfo[5];
     if (partyCount > 1) {
-        output.push(```
-    <dt>Počet politických subjektů ve složení volební strany</dt>
-    <dd>${partyCount}</dd>
-```);
+        addDef(output, 'Počet politických subjektů ve složení volební strany', partyCount);
     }
 
-    output.push(```
+    output.push(`
   </dl>
 
   <h2>Účast ve volbách</h2>
-  <ul>
-```);
+  <ul>`);
 
     const elections = participations[partyId];
-    for (let electionId of Object.keys(elections)) {
+
+    let electionIds = Object.keys(elections);
+    electionIds.sort((a, b) => {
+        const ad = (electionCodebook[a] || {}).date || '?';
+        const bd = (electionCodebook[b] || {}).date || '?';
+        if (ad > bd) return +1;
+        if (ad < bd) return -1;
+        return 0;
+    });
+
+    for (let electionId of electionIds) {
         const electionFlags = elections[electionId];
-        output.push(```
-    <li>${electionid}: ${JSON.stringify(electionFlags)}</li>
-```);
+        const electionInfo = electionCodebook[electionId] || { title: electionId, link: '#' };
+        output.push(`
+    <li><a href="${electionInfo.link}">${escapeHtml(electionInfo.title)}</a> (`);
+        let flagNames = [];
+        if (electionFlags.candidate) flagNames.push('přímá účast');
+        if (electionFlags.member) flagNames.push('kandidoval člen');
+        if (electionFlags.nominating) flagNames.push('navržen kandidát');
+        output.push(flagNames.join(', '));
+        output.push(')</li>');
     }
 
-
-
-    output.push(```
+    output.push(`
   </ul>
 </body>
 </html>
-```);
+`);
 
     fs.writeFileSync(`output/${partyId}.htm`, output.join(''));
+}
 
-    return;
+function addDef(output, heading, value) {
+    if (!value) return;
+    output.push(`
+    <dt>${heading}</dt>
+    <dd>${escapeHtml(value)}</dd>`);
 }
 
 function escapeHtml(s) {
-    return s.replace(/&/g, '&amp;')
+    return String(s)
+        .replace(/&/g, '&amp;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&apos;')
         .replace(/</g, '&lt;')
@@ -210,7 +264,7 @@ function importXmlCodebook(filename, rowElem, idElem, dataElems) {
     let codebook = {};
     reader.on('tag:' + rowElem, row => processCodebookXmlRow(filename, row, idElem, dataElems, codebook));
     const buffer = fs.readFileSync(filename);
-    reader.parse(iconv.decode(buffer, 'windows-1250'));
+    reader.parse(iconv.decode(buffer, 'utf-8'));
     return codebook;
 }
 
