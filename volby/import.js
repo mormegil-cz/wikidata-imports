@@ -365,7 +365,7 @@ function findXmlTextNode(row, elem) {
     for (const child of row.children) {
         if (child.type === 'element' && child.name === elem) {
             if (child.children.length === 1 && child.children[0].type === 'text') {
-                return child.children[0].value;
+                return (child.children[0].value ?? '').replace(/&quot;/g, '"');
             }
         }
     }
