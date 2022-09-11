@@ -50,6 +50,8 @@ importXml('data/ep/ep2019-eprk.xml', 'ep2019', 'EP_REGKAND_ROW', [['ESTRANA'], l
 // console.log(participations);
 
 let partyCodebook = importXmlCodebook('data/current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']);
+addSpecialParty(partyCodebook, '0', ['Žádná strana', '(Kandidát byl pravděpodobně stažen)'])
+
 addSpecialParty(partyCodebook, '997', ['Poslanci', '(Kandidát byl navržen poslanci)'])
 addSpecialParty(partyCodebook, '998', ['Senátoři', '(Kandidát byl navržen senátory)'])
 addSpecialParty(partyCodebook, '999', ['Občan', '(Kandidát byl navržen peticí občanů)'])
@@ -122,6 +124,7 @@ for (const partyId of Object.keys(participations)) {
 <head>
   <meta charset="utf-8">
   <title>${escapeHtml(partyInfo[0])} – účast ve volbách</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>${escapeHtml(partyInfo[0])}</h1>
