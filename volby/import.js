@@ -8,11 +8,11 @@ let participations = {};
 importXml('data/prez/prez2013-perk.xml', 'prez2013', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
 importXml('data/prez/prez2018-perk.xml', 'prez2018', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
 
-importDbf('data/ps/ps2006-psrk.dbf', 'ps2006', 'KSTRANA', 'PSTRANA', 'NSTRANA');
-importDbf('data/ps/ps2010-psrk.dbf', 'ps2010', 'KSTRANA', 'PSTRANA', 'NSTRANA');
-importDbf('data/ps/ps2013-psrk.dbf', 'ps2013', 'KSTRANA', 'PSTRANA', 'NSTRANA');
-importXml('data/ps/ps2017nss-psrk.xml', 'ps2017nss', 'PS_REGKAND_ROW', 'KSTRANA', 'PSTRANA', 'NSTRANA');
-importXml('data/ps/ps2021-psrk.xml', 'ps2021', 'PS_REGKAND_ROW', 'KSTRANA', 'PSTRANA', 'NSTRANA');
+importDbf('data/ps/ps2006-psrk.dbf', 'ps2006', [['KSTRANA'], loadDbfMapping('data/ps/ps2006-psrkl.dbf', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importDbf('data/ps/ps2010-psrk.dbf', 'ps2010', [['KSTRANA'], loadDbfMapping('data/ps/ps2010-psrkl.dbf', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importDbf('data/ps/ps2013-psrk.dbf', 'ps2013', [['KSTRANA'], loadDbfMapping('data/ps/ps2013-psrkl.dbf', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/ps/ps2017nss-psrk.xml', 'ps2017nss', 'PS_REGKAND_ROW', [['KSTRANA'], loadXmlMapping('data/ps/ps2017nss-psrkl.xml', 'PS_RKL_ROW', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/ps/ps2021-psrk.xml', 'ps2021', 'PS_REGKAND_ROW', [['KSTRANA'], loadXmlMapping('data/ps/ps2021-psrkl.xml', 'PS_RKL_ROW', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
 importXml('data/se/se2008-serk.xml', 'se2008', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2010-serk.xml', 'se2010', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
@@ -49,7 +49,13 @@ importXml('data/ep/ep2019-eprk.xml', 'ep2019', 'EP_REGKAND_ROW', [['ESTRANA'], l
 
 // console.log(participations);
 
-const partyCodebook = importXmlCodebook('data/current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']);
+let partyCodebook = importXmlCodebook('data/current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']);
+addSpecialParty(partyCodebook, '997', ['Poslanci', '(Kandidát byl navržen poslanci)'])
+addSpecialParty(partyCodebook, '998', ['Senátoři', '(Kandidát byl navržen senátory)'])
+addSpecialParty(partyCodebook, '999', ['Občan', '(Kandidát byl navržen peticí občanů)'])
+
+addSpecialParty(partyCodebook, '9991', ['Conservative'])
+addSpecialParty(partyCodebook, '9992', ['Piraten'])
 
 const electionCodebook = {
     'prez2013': { title: 'Volba prezidenta republiky konaná ve dnech 11.01. – 12.01.2013', link: 'https://www.volby.cz/pls/prez2013/pe', date: '20130111' },
@@ -104,10 +110,10 @@ const partyType = {
 };
 
 for (const partyId of Object.keys(participations)) {
-    const partyInfo = partyCodebook[partyId];
+    let partyInfo = partyCodebook[partyId];
     if (!partyInfo) {
         console.error(`No party data for ${partyId}`);
-        continue;
+        return;
     }
     let output = [];
 
@@ -164,6 +170,17 @@ for (const partyId of Object.keys(participations)) {
 
     output.push(`
   </ul>
+
+  <h2>Externí odkazy</h2>
+  <ul>
+    <!--li><a href="https://hub.toolforge.org/P11031:${partyId}?site=wikidata">Hledat na Wikidatech</a></li-->
+    <li><a href="https://query.wikidata.org/embed.html#SELECT%20%3Fitem%20%3FitemLabel%20WHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP11031%20%22${partyId}%22.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22cs%22.%20%7D%0A%7D">Hledat na Wikidatech pomocí WQS</a></li>
+  </ul>
+
+  <hr>
+  <footer>
+    Vygenerováno automaticky na základě <a href="https://www.volby.cz/opendata/opendata.htm">Otevřených dat pro volební výsledky</a> publikovaných ČSÚ. Pro zdrojový kód, připomínky a hlášení chyb vizte <a href="https://github.com/mormegil-cz/wikidata-imports/tree/master/volby">GitHub</a>.
+  </footer>
 </body>
 </html>
 `);
@@ -187,6 +204,14 @@ function escapeHtml(s) {
         .replace(/>/g, '&gt;');
 }
 
+function addSpecialParty(codebook, partyId, data) {
+    if (codebook[partyId]) {
+        console.error(`${partyId} already defined in codebook`);
+        return;
+    }
+    codebook[partyId] = data;
+}
+
 function importDbf(filename, electionId, candidateCol, memberCol, nominatingCol) {
     const buffer = fs.readFileSync(filename);
     const datatable = Dbf.read(buffer);
@@ -199,12 +224,27 @@ function importDbf(filename, electionId, candidateCol, memberCol, nominatingCol)
 }
 
 function processDbfColumn(row, col, electionId, participationKind) {
-    const partyId = row[col];
-    if (!partyId) {
-        // possibly “candidate removed by registration authority”
-        // console.debug(`No ${col} found in ${electionId}: ${JSON.stringify(row)}`);
-        return;
+    let partyId;
+    if (Array.isArray(col)) {
+        colNames = col[0];
+        mappingFunction = col[1];
+
+        const idParts = colNames.map(colName => row[colName]);
+        const id = idParts.join(':');
+        partyId = mappingFunction(id);
+        if (!partyId) {
+            console.warn(`Unable to map ${id}`);
+            return;
+        }
+    } else {
+        partyId = row[col];
+        if (!partyId) {
+            // possibly “candidate removed by registration authority”
+            // console.debug(`No ${elemInfo} found in ${electionId}: ${JSON.stringify(row)}`);
+            return;
+        }
     }
+
     recordParticipation(partyId, electionId, participationKind);
 }
 
