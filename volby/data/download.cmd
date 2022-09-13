@@ -12,7 +12,7 @@ call :process "https://www.volby.cz/opendata/ps2006/PS2006reg2006.zip" "ps" "PSR
 call :process "https://www.volby.cz/opendata/ps2010/PS2010reg2010.zip" "ps" "PSRK.dbf" "ps2010-psrk.dbf" "PSRKL.dbf" "ps2010-psrkl.dbf"
 call :process "https://www.volby.cz/opendata/ps2013/PS2013reg20131026.zip" "ps" "PSRK.dbf" "ps2013-psrk.dbf" "PSRKL.dbf" "ps2013-psrkl.dbf"
 call :process "https://www.volby.cz/opendata/ps2017nss/PS2017reg20171122.zip" "ps" "psrk.xml" "ps2017nss-psrk.xml" "psrkl.xml" "ps2017nss-psrkl.xml"
-call :process "https://www.volby.cz/opendata/ps2021/PS2021reg20211111.zip" "ps" "psrk.xml" "ps2021-psrk.xml" "psrkl.xml" "ps2021nss-psrkl.xml"
+call :process "https://www.volby.cz/opendata/ps2021/PS2021reg20211111.zip" "ps" "psrk.xml" "ps2021-psrk.xml" "psrkl.xml" "ps2021-psrkl.xml"
 
 call :process "https://www.volby.cz/opendata/se2008/SE2008reg.zip" "se" "serk.xml" "se2008-serk.xml"
 call :process "https://www.volby.cz/opendata/se2010/SE2010reg.zip" "se" "serk.xml" "se2010-serk.xml"
