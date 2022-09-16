@@ -176,8 +176,8 @@ for (const partyId of Object.keys(participations)) {
 
   <h2>Externí odkazy</h2>
   <ul>
-    <!--li><a href="https://hub.toolforge.org/P11031:${partyId}?site=wikidata">Hledat na Wikidatech</a></li-->
-    <li><a href="https://query.wikidata.org/embed.html#SELECT%20%3Fitem%20%3FitemLabel%20WHERE%20%7B%0A%20%20%3Fitem%20wdt%3AP11031%20%22${partyId}%22.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22cs%22.%20%7D%0A%7D">Hledat na Wikidatech pomocí WQS</a></li>
+    <li><a href="https://hub.toolforge.org/P11031:${partyId}?site=wikidata">Hledat na Wikidatech pomocí Hubu</a></li>
+    <li><a href="https://query.wikidata.org/embed.html#SELECT%20%3Fitem%20%3FitemLabel%20%3Frank%20WHERE%20%7B%0A%20%20%3Fitem%20p%3AP11031%20%3Fprop.%0A%20%20%3Fprop%20ps%3AP11031%20%22${partyId}%22%3B%0A%20%20%20%20wikibase%3Arank%20%3Frank.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22cs%22.%20%7D%0A%7D">Hledat na Wikidatech pomocí WQS</a></li>
   </ul>
 
   <hr>
