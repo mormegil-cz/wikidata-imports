@@ -3,10 +3,12 @@
 if exist download.tmp.zip del download.tmp.zip
 
 
-call :process "https://www.volby.cz/opendata/se2022/SE2022ciselniky20220902.zip" "." "cvs.xml" "current-cvs.xml"
+call :process "https://www.volby.cz/opendata/se2022/SE2022ciselniky20220916.zip" "." "cvs.xml" "current-cvs.xml"
 
 call :process "https://www.volby.cz/opendata/prez2013/PREZ2013reg20130126.zip" "prez" "perk.xml" "prez2013-perk.xml"
 call :process "https://www.volby.cz/opendata/prez2018/PREZ2018reg20180127.zip" "prez" "perk.xml" "prez2018-perk.xml"
+rem call :process "https://www.volby.cz/opendata/prez2023/PREZ2023ciselniky20230109.zip" "prez" "perk.xml" "prez2018-perk.xml"
+wget -O prez\prez2023-perk.xml https://www.volby.cz/opendata/prez2023/xml/perk.xml
 
 call :process "https://www.volby.cz/opendata/ps2006/PS2006reg2006.zip" "ps" "PSRK.dbf" "ps2006-psrk.dbf" "PSRKL.dbf" "ps2006-psrkl.dbf"
 call :process "https://www.volby.cz/opendata/ps2010/PS2010reg2010.zip" "ps" "PSRK.dbf" "ps2010-psrk.dbf" "PSRKL.dbf" "ps2010-psrkl.dbf"

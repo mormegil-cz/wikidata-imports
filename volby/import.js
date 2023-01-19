@@ -7,6 +7,7 @@ let participations = {};
 
 importXml('data/prez/prez2013-perk.xml', 'prez2013', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
 importXml('data/prez/prez2018-perk.xml', 'prez2018', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
+importXml('data/prez/prez2023-perk.xml', 'prez2023', 'PE_REGKAND_ROW', null, 'PSTRANA', 'NSTRANA');
 
 importDbf('data/ps/ps2006-psrk.dbf', 'ps2006', [['KSTRANA'], loadDbfMapping('data/ps/ps2006-psrkl.dbf', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importDbf('data/ps/ps2010-psrk.dbf', 'ps2010', [['KSTRANA'], loadDbfMapping('data/ps/ps2010-psrkl.dbf', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
@@ -62,6 +63,7 @@ addSpecialParty(partyCodebook, '9992', ['Piraten'])
 const electionCodebook = {
     'prez2013': { title: 'Volba prezidenta republiky konaná ve dnech 11.01. – 12.01.2013', link: 'https://www.volby.cz/pls/prez2013/pe', date: '20130111' },
     'prez2018': { title: 'Volba prezidenta republiky konaná ve dnech 12.01. – 13.01.2018', link: 'https://www.volby.cz/pls/prez2018/pe', date: '20180112' },
+    'prez2023': { title: 'Volba prezidenta republiky konaná ve dnech 13.01. – 14.01.2023', link: 'https://www.volby.cz/pls/prez2023/pe', date: '20230113' },
 
     'ps2006': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 02.06. – 03.06.2006', link: 'https://www.volby.cz/pls/ps2006/ps?xjazyk=CZ', date: '20060602' },
     'ps2010': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 28.05. – 29.05.2010', link: 'https://www.volby.cz/pls/ps2010/ps?xjazyk=CZ', date: '20100528' },
