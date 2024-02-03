@@ -113,12 +113,66 @@ const partyType = {
     'D': 'sdružení nezávislých kandidátů a politických stran, hnutí'
 };
 
+const currDate = new Date().toISOString();
+const FOOTER=`
+  <hr>
+  <footer>
+    Vygenerováno ${currDate} automaticky na základě <a href="https://www.volby.cz/opendata/opendata.htm">Otevřených dat pro volební výsledky</a> publikovaných ČSÚ. Pro zdrojový kód, připomínky a hlášení chyb vizte <a href="https://github.com/mormegil-cz/wikidata-imports/tree/master/volby">GitHub</a>.
+  </footer>
+</body>
+</html>
+`;
+
 for (const partyId of Object.keys(participations)) {
     let partyInfo = partyCodebook[partyId];
     if (!partyInfo) {
         console.error(`No party data for ${partyId}`);
         return;
     }
+
+    fs.writeFileSync(`output/${partyId}.htm`, buildPartyFile(partyId, partyInfo));
+}
+
+fs.writeFileSync('output/index.htm', buildIndex(participations));
+
+function buildIndex(participations) {
+    let output = [];
+
+    output.push(`<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <title>Seznam volebních stran v číselníku ČSÚ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Seznam volebních stran v číselníku ČSÚ</h1>
+
+  <dl>`);
+
+  output.push('')
+
+    for (const partyId of Object.keys(participations)) {
+        let partyInfo = partyCodebook[partyId];
+        if (!partyInfo) {
+            console.error(`No party data for ${partyId}`);
+            return;
+        }
+
+        output.push(`
+        <dt>${partyId}</dt>
+        <dd><a href="${partyId}.htm">${escapeHtml(partyInfo[0])}</a></dd>`);
+    }
+
+    output.push(`
+  </dl>
+`);
+    output.push(FOOTER);
+
+    return output.join('');
+}
+
+function buildPartyFile(partyId, partyInfo) {
     let output = [];
 
     output.push(`<!DOCTYPE html>
@@ -181,16 +235,10 @@ for (const partyId of Object.keys(participations)) {
     <li><a href="https://hub.toolforge.org/P11031:${partyId}?site=wikidata">Hledat na Wikidatech pomocí Hubu</a></li>
     <li><a href="https://query.wikidata.org/embed.html#SELECT%20%3Fitem%20%3FitemLabel%20%3Frank%20WHERE%20%7B%0A%20%20%3Fitem%20p%3AP11031%20%3Fprop.%0A%20%20%3Fprop%20ps%3AP11031%20%22${partyId}%22%3B%0A%20%20%20%20wikibase%3Arank%20%3Frank.%0A%20%20SERVICE%20wikibase%3Alabel%20%7B%20bd%3AserviceParam%20wikibase%3Alanguage%20%22cs%22.%20%7D%0A%7D">Hledat na Wikidatech pomocí WQS</a></li>
   </ul>
-
-  <hr>
-  <footer>
-    Vygenerováno automaticky na základě <a href="https://www.volby.cz/opendata/opendata.htm">Otevřených dat pro volební výsledky</a> publikovaných ČSÚ. Pro zdrojový kód, připomínky a hlášení chyb vizte <a href="https://github.com/mormegil-cz/wikidata-imports/tree/master/volby">GitHub</a>.
-  </footer>
-</body>
-</html>
 `);
+    output.push(FOOTER);
 
-    fs.writeFileSync(`output/${partyId}.htm`, output.join(''));
+    return output.join('');
 }
 
 function addDef(output, heading, value) {
