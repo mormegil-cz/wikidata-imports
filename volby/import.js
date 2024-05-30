@@ -73,8 +73,9 @@ addSpecialParty(partyCodebook, '9992', ['Piraten'])
 const electionCodebook = {
     'prez2013': { title: 'Volba prezidenta republiky konaná ve dnech 11.01. – 12.01.2013', link: 'https://www.volby.cz/pls/prez2013/pe', date: '20130111' },
     'prez2018': { title: 'Volba prezidenta republiky konaná ve dnech 12.01. – 13.01.2018', link: 'https://www.volby.cz/pls/prez2018/pe', date: '20180112' },
-    'prez2023': { title: 'Volba prezidenta republiky konaná ve dnech 13.01. – 14.01.2023', link: 'https://www.volby.cz/pls/prez2023/pe', date: '20230113' },
+    'prez2023nss': { title: 'Volba prezidenta republiky konaná ve dnech 13.01. – 14.01.2023', link: 'https://www.volby.cz/pls/prez2023nss/pe', date: '20230113' },
 
+    'ps2002': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 14. – 15.6.2002', link: 'https://www.volby.cz/pls/ps2002/psm', date: '20020615' },
     'ps2006': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 02.06. – 03.06.2006', link: 'https://www.volby.cz/pls/ps2006/ps?xjazyk=CZ', date: '20060602' },
     'ps2010': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 28.05. – 29.05.2010', link: 'https://www.volby.cz/pls/ps2010/ps?xjazyk=CZ', date: '20100528' },
     'ps2013': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 25.10. – 26.10.2013', link: 'https://www.volby.cz/pls/ps2013/ps?xjazyk=CZ', date: '20131025' },
@@ -98,11 +99,14 @@ const electionCodebook = {
     'se2020': { title: 'Volby do Senátu Parlamentu ČR konané dne 2.10. – 3.10.2020', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20201002', date: '20201002' },
     'se2022': { title: 'Volby do Senátu Parlamentu ČR konané dne 23.9. – 24.9.2022', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20220923', date: '20220923' },
 
+    'kz2000': { title: 'Volby do zastupitelstev krajů konané dne 12.11.2000', link: 'https://www.volby.cz/pls/kz2000/kz?xjazyk=CZ&xdatum=20001112', date: '20001112' },
+    'kz2004': { title: 'Volby do zastupitelstev krajů konané dne 5. - 6.11.2004', link: 'https://www.volby.cz/pls/kz2004/kz?xjazyk=CZ&xdatum=20041105', date: '20041105' },
     'kz2008': { title: 'Volby do zastupitelstev krajů konané dne 17.10. – 18.10.2008', link: 'https://www.volby.cz/pls/kz2008/kz?xjazyk=CZ&xdatum=20081017', date: '20081017' },
     'kz2012': { title: 'Volby do zastupitelstev krajů konané dne 12.10. – 13.10.2012', link: 'https://www.volby.cz/pls/kz2012/kz?xjazyk=CZ&xdatum=20121012', date: '20121012' },
     'kz2016': { title: 'Volby do zastupitelstev krajů konané dne 7.10. – 8.10.2016', link: 'https://www.volby.cz/pls/kz2016/kz?xjazyk=CZ&xdatum=20161007', date: '20161007' },
     'kz2020': { title: 'Volby do zastupitelstev krajů konané dne 2.10. – 3.10.2020', link: 'https://www.volby.cz/pls/kz2020/kz?xjazyk=CZ', date: '20201002' },
 
+    'kv2002': { title: 'Volby do zastupitelstev obcí 01.11. - 02.11.2002', link: 'https://www.volby.cz/pls/kv2002/kv?xjazyk=CZ&xid=1', date: '20021101' },
     'kv2006': { title: 'Volby do zastupitelstev obcí 20.10. - 21.10.2006', link: 'https://www.volby.cz/pls/kv2006/kv?xjazyk=CZ&xid=1', date: '20061020' },
     'kv2010': { title: 'Volby do zastupitelstev obcí 15.10. - 16.10.2010', link: 'https://www.volby.cz/pls/kv2010/kv?xjazyk=CZ&xid=1', date: '20101015' },
     'kv2014': { title: 'Volby do zastupitelstev obcí 10.10. - 11.10.2014', link: 'https://www.volby.cz/pls/kv2014/kv?xjazyk=CZ&xid=1', date: '20141010' },
@@ -113,6 +117,7 @@ const electionCodebook = {
     'ep2009': { title: 'Volby do Evropského parlamentu konané na území České republiky ve dnech 05.06. – 06.06.2009', link: 'https://www.volby.cz/pls/ep2009/ep?xjazyk=CZ', date: '20090605' },
     'ep2014': { title: 'Volby do Evropského parlamentu konané na území České republiky ve dnech 23.05. – 24.05.2014', link: 'https://www.volby.cz/pls/ep2014/ep?xjazyk=CZ', date: '20140523' },
     'ep2019': { title: 'Volby do Evropského parlamentu konané na území České republiky ve dnech 24.05. – 25.05.2019', link: 'https://www.volby.cz/pls/ep2019/ep?xjazyk=CZ', date: '20190524' },
+    'ep2024': { title: 'Volby do Evropského parlamentu konané na území České republiky ve dnech 07.06. – 08.06.2024', link: 'https://www.volby.cz/pls/ep2024/ep?xjazyk=CZ', date: '20240607' },
 };
 
 const partyType = {
@@ -226,7 +231,11 @@ function buildPartyFile(partyId, partyInfo) {
 
     for (let electionId of electionIds) {
         const electionFlags = elections[electionId];
-        const electionInfo = electionCodebook[electionId] || { title: electionId, link: '#' };
+        const electionInfo = electionCodebook[electionId];
+        if (!electionInfo) {
+            console.error(`Unknown elections ${electionId}`);
+            return;
+        }
         output.push(`
     <li><a href="${electionInfo.link}">${escapeHtml(electionInfo.title)}</a> (`);
         let flagNames = [];
