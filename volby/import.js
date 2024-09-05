@@ -31,6 +31,7 @@ importXml('data/se/se2019-serk.xml', 'se2019', 'SE_REGKAND_ROW', 'VSTRANA', 'PST
 importXml('data/se/se2020cerven-serk.xml', 'se2020cerven', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2020-serk.xml', 'se2020', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2022-serk.xml', 'se2022', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
+importXml('data/se/se2024-serk.xml', 'se2024', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 
 importXml('data/kz/kz2000-kzrk.xml', 'kz2000', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2000-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/kz/kz2004-kzrk.xml', 'kz2004', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2004-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
@@ -38,6 +39,7 @@ importXml('data/kz/kz2008-kzrk.xml', 'kz2008', 'KZ_REGKAND_ROW', [['KRZAST', 'KS
 importXml('data/kz/kz2012-kzrk.xml', 'kz2012', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2012-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/kz/kz2016-kzrk.xml', 'kz2016', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2016-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/kz/kz2020-kzrk.xml', 'kz2020', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2020-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/kz/kz2024-kzrk.xml', 'kz2024', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2024-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
 importXml('data/kv/kv2002-kvrk.xml', 'kv2002', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA', 'DATUMVOLEB'], loadXmlMapping('data/kv/kv2002-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA', 'DATUMVOLEB'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/kv/kv2006-kvrk.xml', 'kv2006', 'KV_REGKAND_ROW', [['KODZASTUP', 'COBVODU', 'OSTRANA', 'DATUMVOLEB'], loadXmlMapping('data/kv/kv2006-kvros.xml', 'KV_ROS_ROW', ['KODZASTUP', 'COBVODU', 'OSTRANA', 'DATUMVOLEB'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
@@ -98,6 +100,7 @@ const electionCodebook = {
     'se2020cerven': { title: 'Doplňovací volby do Senátu Parlamentu ČR konané dne 5.6. – 6.6.2020', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20200605', date: '20200605' },
     'se2020': { title: 'Volby do Senátu Parlamentu ČR konané dne 2.10. – 3.10.2020', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20201002', date: '20201002' },
     'se2022': { title: 'Volby do Senátu Parlamentu ČR konané dne 23.9. – 24.9.2022', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20220923', date: '20220923' },
+    'se2024': { title: 'Volby do Senátu Parlamentu ČR konané dne 20.9. – 21.9.2024', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20240920', date: '20240920' },
 
     'kz2000': { title: 'Volby do zastupitelstev krajů konané dne 12.11.2000', link: 'https://www.volby.cz/pls/kz2000/kz?xjazyk=CZ&xdatum=20001112', date: '20001112' },
     'kz2004': { title: 'Volby do zastupitelstev krajů konané dne 5. - 6.11.2004', link: 'https://www.volby.cz/pls/kz2004/kz?xjazyk=CZ&xdatum=20041105', date: '20041105' },
@@ -105,6 +108,7 @@ const electionCodebook = {
     'kz2012': { title: 'Volby do zastupitelstev krajů konané dne 12.10. – 13.10.2012', link: 'https://www.volby.cz/pls/kz2012/kz?xjazyk=CZ&xdatum=20121012', date: '20121012' },
     'kz2016': { title: 'Volby do zastupitelstev krajů konané dne 7.10. – 8.10.2016', link: 'https://www.volby.cz/pls/kz2016/kz?xjazyk=CZ&xdatum=20161007', date: '20161007' },
     'kz2020': { title: 'Volby do zastupitelstev krajů konané dne 2.10. – 3.10.2020', link: 'https://www.volby.cz/pls/kz2020/kz?xjazyk=CZ', date: '20201002' },
+    'kz2024': { title: 'Volby do zastupitelstev krajů konané dne 20.9. – 21.9.2024', link: 'https://www.volby.cz/app/kz2024/cs/home', date: '20240920' },
 
     'kv2002': { title: 'Volby do zastupitelstev obcí 01.11. - 02.11.2002', link: 'https://www.volby.cz/pls/kv2002/kv?xjazyk=CZ&xid=1', date: '20021101' },
     'kv2006': { title: 'Volby do zastupitelstev obcí 20.10. - 21.10.2006', link: 'https://www.volby.cz/pls/kv2006/kv?xjazyk=CZ&xid=1', date: '20061020' },

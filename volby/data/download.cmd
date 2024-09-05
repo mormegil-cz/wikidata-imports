@@ -5,9 +5,10 @@ if exist download.tmp.zip del download.tmp.zip
 set FAILED=N
 
 
+
 call :process "https://volby.cz/opendata/ps2021/PS2021ciselniky20211006.zip" "ps" "cvs.xml" "ps-current-cvs.xml"
-call :process "https://volby.cz/opendata/se2022/SE2022ciselniky20220916.zip" "se" "cvs.xml" "se-current-cvs.xml"
-call :process "https://volby.cz/opendata/kz2020/KZ2020ciselniky20201002.zip" "kz" "cvs.xml" "kz-current-cvs.xml"
+call :process "https://volby.cz/opendata/se2024/SE2024ciselniky20240816_xml.zip" "se" "cvs.xml" "se-current-cvs.xml"
+call :process "https://volby.cz/opendata/kz2024/KZ2024ciselniky20240902_xml.zip" "kz" "cvs.xml" "kz-current-cvs.xml"
 call :process "https://volby.cz/opendata/kv2022/KV2022ciselniky20240324.zip" "kv" "cvs.xml" "kv-current-cvs.xml"
 call :process "https://volby.cz/opendata/ep2024/EP2024ciselniky20240506.zip" "ep" "cvs.xml" "ep-current-cvs.xml"
 
@@ -39,6 +40,7 @@ call :process "https://volby.cz/opendata/se2019duben/SE2019reg20190413.zip" "se"
 call :process "https://volby.cz/opendata/se2020cerven/SE2020reg20200613.zip" "se" "serk.xml" "se2020cerven-serk.xml"
 call :process "https://www.volby.cz/opendata/se2020/SE2020reg20201010.zip" "se" "serk.xml" "se2020-serk.xml"
 call :process "https://volby.cz/opendata/se2022/SE2022reg20220902.zip" "se" "serk.xml" "se2022-serk.xml"
+call :process "https://volby.cz/opendata/se2024/SE2024reg20240816_xml.zip" "se" "serk.xml" "se2024-serk.xml"
 
 call :process "https://volby.cz/opendata/kz2000/KZ2000_reg_20230223_xml.zip" "kz" "kzrk.xml" "kz2000-kzrk.xml" "kzrkl.xml" "kz2000-kzrkl.xml"
 call :process "https://volby.cz/opendata/kz2004/KZ2004_reg_20230223_xml.zip" "kz" "kzrk.xml" "kz2004-kzrk.xml" "kzrkl.xml" "kz2004-kzrkl.xml"
@@ -46,6 +48,7 @@ call :process "https://volby.cz/opendata/kz2008/KZ2008_reg_20230223_xml.zip" "kz
 call :process "https://volby.cz/opendata/kz2012/KZ2012_reg_20230223_xml.zip" "kz" "kzrk.xml" "kz2012-kzrk.xml" "kzrkl.xml" "kz2012-kzrkl.xml"
 call :process "https://volby.cz/opendata/kz2016/KZ2016_reg_20230223_xml.zip" "kz" "kzrk.xml" "kz2016-kzrk.xml" "kzrkl.xml" "kz2016-kzrkl.xml"
 call :process "https://volby.cz/opendata/kz2020/KZ2020reg20201004a.zip" "kz" "kzrk.xml" "kz2020-kzrk.xml" "kzrkl.xml" "kz2020-kzrkl.xml"
+call :process "https://volby.cz/opendata/kz2024/KZ2024reg20240902_xml.zip" "kz" "kzrk.xml" "kz2024-kzrk.xml" "kzrkl.xml" "kz2024-kzrkl.xml"
 
 call :process "https://volby.cz/opendata/kv2002/KV2002_reg_20230224_xml.zip" "kv" "kvrk.xml" "kv2002-kvrk.xml" "kvros.xml" "kv2002-kvros.xml"
 call :process "https://volby.cz/opendata/kv2006/KV2006_reg_20230224_xml.zip" "kv" "kvrk.xml" "kv2006-kvrk.xml" "kvros.xml" "kv2006-kvros.xml"
