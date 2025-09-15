@@ -33,6 +33,7 @@ importXml('data/se/se2020cerven-serk.xml', 'se2020cerven', 'SE_REGKAND_ROW', 'VS
 importXml('data/se/se2020-serk.xml', 'se2020', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2022-serk.xml', 'se2022', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2024-serk.xml', 'se2024', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
+importXml('data/se/se2025leden-serk.xml', 'se2025leden', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 
 importXml('data/kz/kz2000-kzrk.xml', 'kz2000', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2000-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/kz/kz2004-kzrk.xml', 'kz2004', 'KZ_REGKAND_ROW', [['KRZAST', 'KSTRANA'], loadXmlMapping('data/kz/kz2004-kzrkl.xml', 'KZ_RKL_ROW', ['KRZAST', 'KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
@@ -103,6 +104,7 @@ const electionCodebook = {
     'se2020': { title: 'Volby do Senátu Parlamentu ČR konané dne 2.10. – 3.10.2020', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20201002', date: '20201002' },
     'se2022': { title: 'Volby do Senátu Parlamentu ČR konané dne 23.9. – 24.9.2022', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20220923', date: '20220923' },
     'se2024': { title: 'Volby do Senátu Parlamentu ČR konané dne 20.9. – 21.9.2024', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20240920', date: '20240920' },
+    'se2025leden': { title: 'Doplňovací volby do Senátu Parlamentu ČR konané dne 17.01. – 18.01.2025', link: 'https://www.volby.cz/app/senat/20250117/cs/home', date: '20250117' },
 
     'kz2000': { title: 'Volby do zastupitelstev krajů konané dne 12.11.2000', link: 'https://www.volby.cz/pls/kz2000/kz?xjazyk=CZ&xdatum=20001112', date: '20001112' },
     'kz2004': { title: 'Volby do zastupitelstev krajů konané dne 5. - 6.11.2004', link: 'https://www.volby.cz/pls/kz2004/kz?xjazyk=CZ&xdatum=20041105', date: '20041105' },
@@ -138,7 +140,7 @@ const currDate = new Date().toISOString();
 const FOOTER=`
   <hr>
   <footer>
-    Vygenerováno ${currDate} automaticky na základě <a href="https://www.volby.cz/opendata/opendata.htm">Otevřených dat pro volební výsledky</a> publikovaných ČSÚ. Pro zdrojový kód, připomínky a hlášení chyb vizte <a href="https://github.com/mormegil-cz/wikidata-imports/tree/master/volby">GitHub</a>.
+    Vygenerováno ${currDate} automaticky na základě <a href="https://volby.cz/opendata/opendata.htm">Otevřených dat pro volební výsledky</a> publikovaných ČSÚ. Pro zdrojový kód, připomínky a hlášení chyb vizte <a href="https://github.com/mormegil-cz/wikidata-imports/tree/master/volby">GitHub</a>.
   </footer>
 </body>
 </html>
