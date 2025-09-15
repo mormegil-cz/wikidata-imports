@@ -14,6 +14,7 @@ importXml('data/ps/ps2010-psrk.xml', 'ps2010', 'PS_REGKAND_ROW', [['KSTRANA'], l
 importXml('data/ps/ps2013-psrk.xml', 'ps2013', 'PS_REGKAND_ROW', [['KSTRANA'], loadXmlMapping('data/ps/ps2013-psrkl.xml', 'PS_RKL_ROW', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/ps/ps2017nss-psrk.xml', 'ps2017nss', 'PS_REGKAND_ROW', [['KSTRANA'], loadXmlMapping('data/ps/ps2017nss-psrkl.xml', 'PS_RKL_ROW', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 importXml('data/ps/ps2021-psrk.xml', 'ps2021', 'PS_REGKAND_ROW', [['KSTRANA'], loadXmlMapping('data/ps/ps2021-psrkl.xml', 'PS_RKL_ROW', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
+importXml('data/ps/ps2025-psrk.xml', 'ps2025', 'PS_REGKAND_ROW', [['KSTRANA'], loadXmlMapping('data/ps/ps2025-psrkl.xml', 'PS_RKL_ROW', ['KSTRANA'], 'VSTRANA')], 'PSTRANA', 'NSTRANA');
 
 importXml('data/se/se2008-serk.xml', 'se2008', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
 importXml('data/se/se2010-serk.xml', 'se2010', 'SE_REGKAND_ROW', 'VSTRANA', 'PSTRANA', 'NSTRANA');
@@ -57,11 +58,11 @@ importXml('data/ep/ep2024-eprk.xml', 'ep2024', 'EP_REGKAND_ROW', [['ESTRANA'], l
 // console.log(participations);
 
 let partyCodebook = {};
-appendXmlCodebook(partyCodebook, importXmlCodebook('data/ps/ps-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']));
-appendXmlCodebook(partyCodebook, importXmlCodebook('data/se/se-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']));
-appendXmlCodebook(partyCodebook, importXmlCodebook('data/kz/kz-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']));
-appendXmlCodebook(partyCodebook, importXmlCodebook('data/kv/kv-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']));
-appendXmlCodebook(partyCodebook, importXmlCodebook('data/ep/ep-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS']));
+appendXmlCodebook(partyCodebook, importXmlCodebook('data/ps/ps-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS'], 'windows-1250'));
+appendXmlCodebook(partyCodebook, importXmlCodebook('data/se/se-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS'], 'utf-8'));
+appendXmlCodebook(partyCodebook, importXmlCodebook('data/kz/kz-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS'], 'utf-8'));
+appendXmlCodebook(partyCodebook, importXmlCodebook('data/kv/kv-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS'], 'utf-8'));
+appendXmlCodebook(partyCodebook, importXmlCodebook('data/ep/ep-current-cvs.xml', 'CVS_ROW', 'VSTRANA', ['NAZEVCELK', 'NAZEV_STRV', 'ZKRATKAV30', 'ZKRATKAV8', 'ZKRATKA_OF', 'POCSTR_SLO', 'TYPVS'], 'utf-8'));
 
 addSpecialParty(partyCodebook, '0', ['Žádná strana', '(Kandidát byl pravděpodobně stažen)'])
 
@@ -83,6 +84,7 @@ const electionCodebook = {
     'ps2013': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 25.10. – 26.10.2013', link: 'https://www.volby.cz/pls/ps2013/ps?xjazyk=CZ', date: '20131025' },
     'ps2017nss': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 20.10. – 21.10.2017', link: 'https://www.volby.cz/pls/ps2017nss/ps?xjazyk=CZ', date: '20171020' },
     'ps2021': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 8.10. – 9.10.2021', link: 'https://www.volby.cz/pls/ps2021/ps?xjazyk=CZ', date: '20211008' },
+    'ps2025': { title: 'Volby do Poslanecké sněmovny Parlamentu České republiky konané ve dnech 03.10.2025 – 04.10.2025', link: 'https://www.volby.cz/app/ps2025/cs/home', date: '20251003' },
 
     'se2008': { title: 'Volby do Senátu Parlamentu ČR konané dne 17.10. – 18.10.2008', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20081017', date: '20081017' },
     'se2010': { title: 'Volby do Senátu Parlamentu ČR konané dne 15.10. – 16.10.2010', link: 'https://www.volby.cz/pls/senat/se?xjazyk=CZ&xdatum=20101015', date: '20101015' },
@@ -318,13 +320,13 @@ function appendXmlCodebook(currCodebook, importedCodebook) {
     Object.assign(currCodebook, importedCodebook);
 }
 
-function importXmlCodebook(filename, rowElem, idElem, dataElems) {
+function importXmlCodebook(filename, rowElem, idElem, dataElems, encoding) {
     console.debug(`Loading XML codebook from ${filename}`);
     const reader = XmlReader.create({ stream: true, emitTopLevelOnly: true, parentNodes: false });
     let codebook = {};
     reader.on('tag:' + rowElem, row => processCodebookXmlRow(filename, row, idElem, dataElems, codebook));
     const buffer = fs.readFileSync(filename);
-    reader.parse(iconv.decode(buffer, 'utf-8'));
+    reader.parse(iconv.decode(buffer, encoding));
     return codebook;
 }
 

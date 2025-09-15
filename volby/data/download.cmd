@@ -6,7 +6,7 @@ set FAILED=N
 
 
 
-call :process "https://volby.cz/opendata/ps2021/PS2021ciselniky20211006.zip" "ps" "cvs.xml" "ps-current-cvs.xml"
+wget -O "ps\ps-current-cvs.xml" "https://www.volby.cz/opendata/ps2025/xml/cvs.xml"
 call :process "https://volby.cz/opendata/se2024/SE2024ciselniky20240816_xml.zip" "se" "cvs.xml" "se-current-cvs.xml"
 call :process "https://volby.cz/opendata/kz2024/KZ2024ciselniky20240902_xml.zip" "kz" "cvs.xml" "kz-current-cvs.xml"
 call :process "https://volby.cz/opendata/kv2022/KV2022ciselniky20240324.zip" "kv" "cvs.xml" "kv-current-cvs.xml"
@@ -22,6 +22,8 @@ call :process "https://volby.cz/opendata/ps2010/PS2010_reg_20230428_xml.zip" "ps
 call :process "https://volby.cz/opendata/ps2013/PS2013_reg_20230428_xml.zip" "ps" "psrk.xml" "ps2013-psrk.xml" "psrkl.xml" "ps2013-psrkl.xml"
 call :process "https://www.volby.cz/opendata/ps2017nss/PS2017reg20171122.zip" "ps" "psrk.xml" "ps2017nss-psrk.xml" "psrkl.xml" "ps2017nss-psrkl.xml"
 call :process "https://www.volby.cz/opendata/ps2021/PS2021reg20211111.zip" "ps" "psrk.xml" "ps2021-psrk.xml" "psrkl.xml" "ps2021-psrkl.xml"
+wget -O "ps\ps2025-psrk.xml" "https://www.volby.cz/opendata/ps2025/xml/psrk.xml"
+wget -O "ps\ps2025-psrkl.xml" "https://www.volby.cz/opendata/ps2025/xml/psrkl.xml"
 
 call :process "https://www.volby.cz/opendata/se2008/SE2008reg.zip" "se" "serk.xml" "se2008-serk.xml"
 call :process "https://www.volby.cz/opendata/se2010/SE2010reg.zip" "se" "serk.xml" "se2010-serk.xml"
